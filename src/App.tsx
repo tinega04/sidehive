@@ -103,12 +103,6 @@ const App: React.FC = () => {
               {selectedCategory ? 'Browse business ideas in this category' : 'Select an industry to explore business ideas'}
             </p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="text-indigo-600 hover:text-indigo-700 font-medium"
-          >
-            Sign Out
-          </button>
         </div>
 
         {!selectedCategory ? (

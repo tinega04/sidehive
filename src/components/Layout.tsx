@@ -15,8 +15,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { icon: '💡', label: 'Browse Ideas', isActive: false },
     { icon: '⭐', label: 'Saved Hustles', isActive: false },
     { icon: '🛠️', label: 'Tools', isActive: false },
-    { icon: '👤', label: 'Profile', isActive: false },
   ];
+
+  const handleProfileClick = () => {
+    // Profile functionality will be implemented here
+    console.log('Profile clicked');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -53,18 +57,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {/* Footer */}
           <div className="p-4 border-t border-gray-200">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+              <button
+                onClick={handleProfileClick}
+                className="flex items-center space-x-3 group"
+              >
+                <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
                   <span className="text-sm font-medium text-indigo-600">JD</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-700">John Doe</p>
-                  <p className="text-xs text-gray-500 hover:text-indigo-600 cursor-pointer">View Profile</p>
+                  <p className="text-sm font-medium text-gray-700 group-hover:text-indigo-600">John Doe</p>
+                  <p className="text-xs text-gray-500 group-hover:text-indigo-600">View Profile</p>
                 </div>
-              </div>
+              </button>
               <button
                 onClick={logout}
-                className="text-sm text-gray-500 hover:text-indigo-600"
+                className="text-sm text-gray-500 hover:text-indigo-600 transition-colors"
               >
                 Sign Out
               </button>
