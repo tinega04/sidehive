@@ -1,17 +1,23 @@
 export enum Industry {
-  Retail = 'Retail',
-  FoodAndBeverage = 'Food & Beverage',
-  Services = 'Services',
-  FashionAndBeauty = 'Fashion & Beauty',
-  DigitalAndOnline = 'Digital/Online',
-  HomeAndLiving = 'Home & Living',
-  EventsAndGifting = 'Events & Gifting',
+  RETAIL = 'Retail',
+  MANUFACTURING = 'Manufacturing',
+  SERVICES = 'Services',
+  FOOD = 'Food & Beverage',
+  TECH = 'Technology',
+  AGRICULTURE = 'Agriculture',
 }
 
-export enum CapitalTier {
-  Low = 'Low',
-  Medium = 'Medium',
-  High = 'High',
+export type CapitalTier = 'low' | 'medium' | 'high' | 'all';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface MoneyRange {
+  min: number;
+  max: number;
 }
 
 export interface BusinessIdea {
@@ -19,19 +25,24 @@ export interface BusinessIdea {
   title: string;
   description: string;
   industry: Industry;
-  capitalRequired: number;
-  estimatedROI: string;
-  toolsAndSkills: string[];
-  startupSteps: string[];
-  capitalTier: CapitalTier;
-  localResources?: string[];
+  startupCapital: MoneyRange;
+  monthlyProfit: MoneyRange;
+  tags: string[];
+  popularity: number;
+}
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: User | null;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
 }
 
 export interface StoreState {
   industry: Industry | 'all';
-  capitalTier: CapitalTier | 'all';
+  capitalTier: CapitalTier;
   setIndustry: (industry: Industry | 'all') => void;
-  setCapitalTier: (capitalTier: CapitalTier | 'all') => void;
+  setCapitalTier: (tier: CapitalTier) => void;
 }
 
 export interface ChatMessage {

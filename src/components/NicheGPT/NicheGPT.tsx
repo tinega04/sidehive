@@ -11,7 +11,7 @@ const NicheGPT: React.FC = () => {
 
   return (
     <>
-      {isOpen && <ChatInterface />}
+      {isOpen && <ChatInterface onClose={toggleChat} />}
       <FloatingButton onClick={toggleChat} isOpen={isOpen} />
     </>
   );

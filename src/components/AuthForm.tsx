@@ -6,62 +6,43 @@ interface AuthFormProps {
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const login = useAuthStore(state => state.login);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { login } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setLoading(true);
+    setError(null);
+    setIsLoading(true);
 
     try {
-      if (isLogin) {
-        const success = await login({ email, password });
-        if (success) {
-          onSuccess();
-        } else {
-          setError('Invalid credentials');
-        }
-      } else {
-        // For now, show message that only login is supported
-        setError('Sign up is not available in demo mode. Please use the test account.');
-      }
+      await login(email, password);
+      onSuccess();
     } catch (err) {
-      setError('An error occurred');
+      setError('Failed to authenticate. Please try again.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
-        {isLogin ? 'Sign In' : 'Create Account'}
-      </h2>
-
-      {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
-          {error}
-        </div>
-      )}
-
+    <div className="bg-white p-8 rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">Welcome Back</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
             Email
           </label>
           <input
-            type="email"
             id="email"
+            type="email"
+            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            required
+            placeholder="Enter your email"
           />
         </div>
 
@@ -70,40 +51,42 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             Password
           </label>
           <input
-            type="password"
             id="password"
+            type="password"
+            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            required
+            placeholder="Enter your password"
           />
         </div>
 
+        {error && (
+          <div className="text-red-600 text-sm">{error}</div>
+        )}
+
         <button
           type="submit"
-          disabled={loading}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+          disabled={isLoading}
+          className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+            isLoading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
-          {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
+          {isLoading ? 'Signing in...' : 'Sign In'}
         </button>
-      </form>
 
-      <div className="mt-6 text-center">
-        <button
-          onClick={() => setIsLogin(!isLogin)}
-          className="text-sm text-indigo-600 hover:text-indigo-500"
-        >
-          {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
-        </button>
-      </div>
-
-      {isLogin && (
-        <div className="mt-4 text-sm text-gray-600">
-          <p className="text-center">Test Account:</p>
-          <p className="text-center">Email: stephentinega04@gmail.com</p>
-          <p className="text-center">Password: 12345678</p>
+        <div className="text-center">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{' '}
+            <button
+              type="button"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              Sign up
+            </button>
+          </p>
         </div>
-      )}
+      </form>
     </div>
   );
 };

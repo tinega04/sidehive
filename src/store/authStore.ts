@@ -1,38 +1,23 @@
-import { create } from 'zustand';
-import { AuthState, LoginCredentials, User } from '../types/auth';
+import create from 'zustand';
+import { AuthState, User } from '../types/types';
 
-// Temporary user credentials for testing
-const TEMP_USER = {
-  email: 'stephentinega04@gmail.com',
-  password: '12345678',
-};
-
-interface AuthStore extends AuthState {
-  login: (credentials: LoginCredentials) => Promise<boolean>;
-  logout: () => void;
-}
-
-export const useAuthStore = create<AuthStore>((set) => ({
-  user: null,
+export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
-
-  login: async (credentials: LoginCredentials) => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    // Check against temporary credentials
-    if (credentials.email === TEMP_USER.email && credentials.password === TEMP_USER.password) {
-      const user: User = {
-        email: credentials.email,
-        id: '1', // Temporary ID
-      };
-      set({ user, isAuthenticated: true });
-      return true;
-    }
-    return false;
+  user: null,
+  login: async (email: string, password: string) => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // For demo purposes, auto-login with a mock user
+    const mockUser: User = {
+      id: '1',
+      name: 'John Doe',
+      email: email,
+    };
+    
+    set({ isAuthenticated: true, user: mockUser });
   },
-
   logout: () => {
-    set({ user: null, isAuthenticated: false });
+    set({ isAuthenticated: false, user: null });
   },
 })); 
